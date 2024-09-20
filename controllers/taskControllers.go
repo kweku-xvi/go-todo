@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"time"
+
 	"github.com/gin-gonic/gin"
 	"github.com/kweku-xvi/todolist-api/initializers"
 	"github.com/kweku-xvi/todolist-api/models"
@@ -8,9 +10,11 @@ import (
 
 func CreateTask(c *gin.Context) {
 	var body struct {
-		Title       string
-		Description string
-		Priority    string
+		Title       string    `json:"title" form:"title"`
+		Description string    `json:"description" form:"description"`
+		Priority    string    `json:"priority" form:"priority"`
+		Deadline    time.Time `json:"deadline" form:"deadline"`
+		Status      string    `json:"status" form:"status"`
 	}
 	c.Bind(&body)
 
@@ -18,6 +22,8 @@ func CreateTask(c *gin.Context) {
 		Title:       body.Title,
 		Description: body.Description,
 		Priority:    body.Priority,
+		Deadline:    body.Deadline,
+		Status:      body.Status,
 	}
 
 	result := initializers.DB.Create(&task)
@@ -63,9 +69,11 @@ func UpdateTask(c *gin.Context) {
 	id := c.Param("id")
 
 	var body struct {
-		Title       string
-		Description string
-		Priority    string
+		Title       string    `json:"title" form:"title"`
+		Description string    `json:"description" form:"description"`
+		Priority    string    `json:"priority" form:"priority"`
+		Deadline    time.Time `json:"deadline" form:"deadline"`
+		Status      string    `json:"status" form:"status"`
 	}
 	c.Bind(&body)
 
@@ -80,6 +88,8 @@ func UpdateTask(c *gin.Context) {
 		initializers.DB.Model(&task).Updates(models.Task{Title: body.Title,
 			Description: body.Description,
 			Priority:    body.Priority,
+			Deadline:    body.Deadline,
+			Status:      body.Status,
 		})
 		c.JSON(200, gin.H{
 			"task": task,

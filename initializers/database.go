@@ -4,6 +4,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/kweku-xvi/todolist-api/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -17,6 +18,12 @@ func ConnectToDB() {
 	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
 	if err != nil {
-		log.Fatal("Error connecting to database")
+		log.Fatal("error connecting to database")
+	}
+
+	// Running migrations on DB
+	err = DB.AutoMigrate(&models.Task{})
+	if err != nil {
+		log.Fatal("failed to run database migrations")
 	}
 }
